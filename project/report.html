@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>گزارش پروژه شماره ۲ - جستجوی محلی</title>
+<style>
+    @page { size: A4; margin: 2cm; }
+    body {
+        font-family: 'DejaVu Sans', 'Tahoma', sans-serif;
+        direction: rtl;
+        text-align: justify;
+        line-height: 1.8;
+        font-size: 11pt;
+        color: #222;
+    }
+    h1 {
+        text-align: center;
+        font-size: 18pt;
+        border-bottom: 2px solid #444;
+        padding-bottom: 10px;
+        margin-bottom: 20px;
+    }
+    h2 {
+        font-size: 14pt;
+        color: #003366;
+        border-right: 4px solid #003366;
+        padding-right: 8px;
+        margin-top: 25px;
+    }
+    h3 {
+        font-size: 12pt;
+        color: #003366;
+        margin-top: 18px;
+    }
+    p { margin: 8px 0; }
+    ul, ol { padding-right: 25px; }
+    li { margin: 4px 0; }
+    code {
+        font-family: 'DejaVu Sans Mono', monospace;
+        background: #f4f4f4;
+        padding: 1px 5px;
+        border-radius: 3px;
+        direction: ltr;
+        display: inline-block;
+        font-size: 10pt;
+    }
+    pre {
+        background: #f4f4f4;
+        padding: 10px;
+        border-radius: 5px;
+        direction: ltr;
+        text-align: left;
+        font-size: 9.5pt;
+        overflow-x: auto;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        margin: 10px 0;
+        font-size: 10pt;
+    }
+    th, td {
+        border: 1px solid #888;
+        padding: 6px 8px;
+        text-align: center;
+    }
+    th {
+        background: #003366;
+        color: white;
+    }
+    tr:nth-child(even) td { background: #f4f4f4; }
+    .ltr-inline { direction: ltr; unicode-bidi: embed; display: inline-block; }
+    .figure {
+        text-align: center;
+        margin: 15px 0;
+    }
+    .figure img { width: 16cm; height: auto; }
+    .figure .caption {
+        font-size: 9.5pt;
+        color: #555;
+        margin-top: 5px;
+    }
+    .header-info {
+        text-align: center;
+        font-size: 10pt;
+        color: #444;
+        margin-bottom: 20px;
+    }
+    .repo-box {
+        background: #fff8e7;
+        border: 1px solid #e0c068;
+        padding: 8px 12px;
+        border-radius: 5px;
+        margin: 15px 0;
+    }
+    .note {
+        background: #eef5ff;
+        border-right: 3px solid #003366;
+        padding: 6px 12px;
+        margin: 10px 0;
+        font-size: 10.5pt;
+    }
+</style>
+</head>
+<body>
+
+<h1>گزارش پروژه شماره ۲: جستجوی محلی (آخرین سیگنال)</h1>
+<div class="header-info">
+    درس هوش مصنوعی &mdash; نیم‌سال دوم ۱۴۰۵-۱۴۰۴ &mdash; دانشگاه اصفهان<br>
+    استاد: دکتر فریا نصیری‌مفخم
+</div>
+
+<div class="repo-box">
+    <p style="margin: 0 0 6px 0;"><strong>لینک ریپازیتوری گیت (پابلیک):</strong></p>
+    <p style="margin: 0 0 6px 0;"><span class="ltr-inline">https://github.com/&lt;USERNAME&gt;/&lt;REPO_NAME&gt;</span></p>
+    <p style="margin: 0; font-size: 10pt;"><em>(لطفاً پیش از ارسال، این مقدار را با لینک واقعی ریپازیتوری خود جایگزین کنید.)</em></p>
+</div>
+
+<h2>۱. شرح مسئله</h2>
+<p>
+هدف پروژه، حل یک مسئله‌ی بهینه‌سازی در محیط <span class="ltr-inline">Grid World</span> است:
+چیدمان مجموعه‌ای از سنسورها در یک نقشه‌ی شطرنجی به‌گونه‌ای که بیشترین تعداد اهداف زیر پوشش قرار گیرد،
+سنسورها روی موانع یا خارج محیط قرار نگیرند، و تعداد سنسورهای مورد استفاده تا حد ممکن کم باشد.
+شعاع پوشش هر سنسور با فاصله‌ی منهتن سنجیده می‌شود (مطابق با تابع رندر پروژه).
+</p>
+<p>
+این یک مسئله‌ی ترکیبی با فضای حالت گسسته و بزرگ است؛ بنابراین الگوریتم‌های جستجوی محلی
+انتخاب طبیعی برای حل آن هستند. در این پروژه دو الگوریتم اجباری
+(<span class="ltr-inline">Hill Climbing</span> و <span class="ltr-inline">Simulated Annealing</span>)
+و سه الگوریتم امتیازی
+(<span class="ltr-inline">Genetic Algorithm</span>،
+<span class="ltr-inline">Beam Search</span>،
+<span class="ltr-inline">Tabu Search</span>) پیاده‌سازی و با یکدیگر مقایسه شده‌اند.
+</p>
+
+<h2>۲. ساختار کد</h2>
+<p>کد پروژه روی اسکلت داده‌شده توسط استاد بنا شده است. فقط در پوشه‌ی <code>search/</code> و فایل <code>main.py</code> تغییر/افزودن انجام شده است:</p>
+<pre>project/
+├─ main.py                 # نقطه ورود — اجرای الگوریتم‌ها و نمایش نتایج
+├─ utils.py                # توابع نمایش/رسم (بدون تغییر)
+├─ env/                    # محیط GridWorld و رندر (بدون تغییر)
+└─ search/
+   ├─ local_search_base.py    # کلاس پایه: evaluate / get_neighbor / initialize_state
+   ├─ hill_climbing.py        # الگوریتم Hill Climbing
+   ├─ simulated_annealing.py  # الگوریتم Simulated Annealing
+   ├─ genetic_algorithm.py    # امتیازی
+   ├─ beam_search.py          # امتیازی
+   └─ tabu_search.py          # امتیازی</pre>
+
+<h2>۳. طراحی تابع هزینه (Cost Function)</h2>
+<p>
+تابع هزینه‌ی پیاده‌سازی‌شده، یک ترکیب وزن‌دار از سه عبارت است (در فایل <code>local_search_base.py</code>):
+</p>
+<pre>cost(state) = W_UNCOVERED * (#uncovered targets)
+            + W_SENSOR    * (#sensors used)
+            + W_OVERLAP   * (extra coverers beyond the first per target)
+
+W_UNCOVERED = 100
+W_SENSOR    = 5
+W_OVERLAP   = 1</pre>
+<p>منطق انتخاب وزن‌ها:</p>
+<ul>
+    <li>عبارت <span class="ltr-inline">uncovered</span> دارای وزن غالب است تا اولویت اول الگوریتم همواره «پوشش‌ دادن اهداف» باشد.</li>
+    <li>عبارت <span class="ltr-inline">sensor</span> با وزن کوچک‌تر، حالت‌هایی را که با تعداد سنسور کمتر همان پوشش را می‌دهند ترجیح می‌دهد &mdash; دقیقاً همان trade-off خواسته‌شده در صورت پروژه.</li>
+    <li>عبارت <span class="ltr-inline">overlap</span> دو سنسوری را که یک هدف مشترک را پوشش می‌دهند جریمه می‌کند، که عملاً سنسورها را به سمت پراکندگی روی نقشه می‌راند و گیر افتادن در چیدمان‌های متراکم را کاهش می‌دهد.</li>
+</ul>
+<p>چون «هزینه‌ی کمتر = بهتر»، الگوریتم‌ها همگی به‌صورت minimization پیاده شده‌اند.</p>
+
+<h2>۴. طراحی تابع همسایگی (Neighbor Function)</h2>
+<p>
+صورت پروژه به‌صراحت می‌خواهد که هر سه عملیات
+<span class="ltr-inline">move</span>،
+<span class="ltr-inline">add</span> و
+<span class="ltr-inline">remove</span>
+در تولید همسایه پشتیبانی شوند. این عملیات‌ها در کلاس پایه پیاده‌سازی شده‌اند:
+</p>
+<ul>
+    <li>
+        <strong>MOVE:</strong> یک سنسور به‌صورت تصادفی انتخاب می‌شود؛ ابتدا تلاش می‌شود به یکی از چهار خانه‌ی مجاور (همسایگی فون نیومن) منتقل شود (برای fine-tuning).
+        اگر همه‌ی خانه‌های مجاور مانع یا اشغال بودند، سنسور به یک خانه‌ی معتبر تصادفی در کل نقشه پرش می‌کند (برای فرار از local optimum).
+    </li>
+    <li>
+        <strong>ADD:</strong> یک خانه‌ی خالی و معتبر تصادفی انتخاب و سنسوری در آن قرار می‌گیرد &mdash; مشروط بر اینکه سقف <code>max_sensors</code> رعایت شود.
+    </li>
+    <li>
+        <strong>REMOVE:</strong> یک سنسور تصادفی حذف می‌شود &mdash; مشروط بر اینکه دست‌کم یک سنسور باقی بماند.
+    </li>
+</ul>
+<p>
+احتمال انتخاب هر عملیات: <code>move</code> با وزن ۳، <code>add</code> و <code>remove</code> هرکدام با وزن ۱.
+دلیل این انتخاب آن است که وقتی تعداد سنسورها تقریباً درست باشد، عمده‌ی پیشرفت‌های ممکن از طریق جابه‌جا کردن سنسورهای موجود به دست می‌آیند نه از طریق تغییر اندازه‌ی state.
+به‌علاوه، در حالاتی که اندازه‌ی <span class="ltr-inline">state</span> به مرز ظرفیت رسیده باشد، عملیات نامعتبر به‌طور خودکار از فهرست انتخاب حذف می‌شود.
+</p>
+<p>
+این طراحی فضای جستجو را پویا می‌کند &mdash; یعنی تعداد سنسورها در طول اجرا تغییر می‌کند &mdash; و این دقیقاً همان رفتاری است که پروژه برای مدیریت بهینه‌ی trade-off کیفیت پوشش و مصرف منابع از ما خواسته است.
+</p>
+
+<h2>۵. الگوریتم Hill Climbing</h2>
+<p>پیاده‌سازی این الگوریتم در فایل <code>search/hill_climbing.py</code> از نوع <strong>steepest-ascent تصادفی</strong> با دو افزونه است:</p>
+<ol>
+    <li>در هر مرحله، تعداد ثابتی همسایه (پیش‌فرض ۲۵) نمونه‌برداری شده و کم‌هزینه‌ترین آن‌ها انتخاب می‌شود.</li>
+    <li><strong>حرکت‌های sideways:</strong> اگر بهترین همسایه هم‌هزینه با حالت فعلی باشد، تا سقف <code>max_sideways=10</code> گام به آن منتقل می‌شویم تا plateaهای صاف (که در این مسئله بسیار رایج‌اند، چون هزینه‌ها گسسته هستند) رد شوند.</li>
+    <li><strong>راه‌اندازی مجدد تصادفی:</strong> اگر گیر کنیم و بودجه‌ی sideways تمام شود، تا <code>max_restarts=3</code> بار از یک حالت تصادفی جدید شروع می‌کنیم، در حالی که بهترین حالت دیده‌شده تاکنون را نگه می‌داریم.</li>
+</ol>
+<p>این دو افزونه ضعف اصلی <span class="ltr-inline">Hill Climbing</span> پایه &mdash; یعنی گیر کردن در local optimum &mdash; را تا حد قابل توجهی کاهش می‌دهند، بدون اینکه ماهیت «بهترین همسایه را بگیر» الگوریتم تغییر کند.</p>
+
+<h2>۶. الگوریتم Simulated Annealing</h2>
+<p>پیاده‌سازی استاندارد با کوولینگ نمایی (در فایل <code>search/simulated_annealing.py</code>):</p>
+<pre>T_{t+1} = T_t * alpha,   alpha = 0.995
+P(accept worse) = exp(-delta / T)
+T_start = 10.0,   T_min = 1e-3,   max_iter = 2000</pre>
+<p>
+در ابتدای اجرا (دمای بالا) تقریباً هر همسایه‌ای حتی اگر بدتر باشد قبول می‌شود، که اکتشاف وسیع فضای حالت را ممکن می‌کند.
+به‌مرور دما پایین می‌آید و فقط بهبودها قبول می‌شوند &mdash; یعنی الگوریتم به‌تدریج از <em>exploration</em> به <em>exploitation</em> منتقل می‌شود.
+این رفتار کلاسیک <span class="ltr-inline">SA</span> دلیل اصلی توانایی آن در عبور از local optimumهایی است که <span class="ltr-inline">Hill Climbing</span> در آن‌ها گیر می‌کند.
+</p>
+<p><strong>پارامترهای حساس:</strong></p>
+<ul>
+    <li><span class="ltr-inline">alpha</span> &mdash; نزدیک‌تر به ۱ یعنی کوولینگ کندتر و جستجوی دقیق‌تر، اما زمان اجرای بیشتر. ۰٫۹۹۵ تعادل خوبی است.</li>
+    <li><span class="ltr-inline">T_start</span> &mdash; باید آن‌قدر بزرگ باشد که در ابتدا اکثر <span class="ltr-inline">deltaها</span> (که در مقیاس ده‌ها واحد هستند به دلیل وزن ۱۰۰ برای هدف بدون پوشش) قابل قبول باشند.</li>
+</ul>
+
+<h2>۷. الگوریتم‌های امتیازی</h2>
+
+<h3>۷.۱ Genetic Algorithm</h3>
+<p>
+هر فرد یک لیست از مختصات سنسورهاست. اپراتورها:
+<strong>tournament selection</strong> با اندازه‌ی ۳،
+<strong>uniform crossover</strong> روی اجتماع مجموعه‌های سنسورِ دو والد با اندازه‌ی فرزند به‌صورت تصادفی بین دو والد،
+<strong>mutation</strong> با احتمال ۰٫۳ که خودِ همان <code>get_neighbor</code> کلاس پایه را فراخوانی می‌کند (سازگاری اپراتورها)،
+و <strong>elitism</strong> با ۲ نخبه در هر نسل.
+</p>
+
+<h3>۷.۲ Beam Search (Local Beam)</h3>
+<p>
+به‌جای یک نقطه‌ی فعلی، <span class="ltr-inline">beam_width</span> حالت موازی نگه می‌داریم.
+در هر دور، هر حالت تعدادی همسایه می‌سازد، همه با هم در یک استخر جمع می‌شوند، و <span class="ltr-inline">beam_width</span> حالتِ کم‌هزینه‌تر برای دور بعد انتخاب می‌شوند.
+خود beam فعلی هم در رقابت می‌ماند (نوعی elitism) که تضمین کند روند هرگز بدتر نمی‌شود.
+</p>
+
+<h3>۷.۳ Tabu Search</h3>
+<p>
+در هر گام، بهترین همسایه‌ی <em>غیرتابو</em> انتخاب می‌شود &mdash; حتی اگر بدتر از حالت فعلی باشد &mdash;
+و سپس حالت فعلی به فهرست تابو (deque با طول حداکثر <code>tabu_tenure=20</code>) اضافه می‌شود تا برای مدتی نتوانیم به آن برگردیم.
+اگر یک حرکت تابو منجر به بهبود <em>بهترین جواب کل اجرا</em> شود، با معیار aspiration اجازه‌ی انجام پیدا می‌کند.
+این مکانیزم در عمل بسیار مؤثرتر از سایدوِی‌مووز <span class="ltr-inline">Hill Climbing</span> در فرار از local optima است (به نتایج بخش ۸ نگاه کنید).
+</p>
+
+<h2>۸. نتایج تجربی</h2>
+<p>
+هر الگوریتم در ۳ seed مستقل روی هر نقشه اجرا شد. در همه‌ی اجراها، حالت اولیه‌ی یکسانی استفاده می‌شود تا مقایسه‌ی منصفانه برقرار باشد.
+معیارها: میانگین هزینه‌ی نهایی (کمتر بهتر است)، بهترین هزینه‌ی دیده‌شده، درصد پوشش (نسبت اهداف تحت‌نظر به کل اهداف)، و میانگین تعداد سنسورهای استفاده‌شده.
+</p>
+
+<table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse;">
+    <thead>
+        <tr>
+            <th>نقشه</th>
+            <th>الگوریتم</th>
+            <th>میانگین هزینه</th>
+            <th>بهترین هزینه</th>
+            <th>پوشش (٪)</th>
+            <th>تعداد سنسور</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td rowspan="5">map1<br>(۳۱ هدف، شعاع ۲، سقف ۲۰)</td>
+            <td>Hill Climbing</td><td>۷۳٫۳</td><td>۷۰٫۰</td><td>۱۰۰٫۰</td><td>۱۴٫۷</td></tr>
+        <tr><td>Simulated Annealing</td><td>۷۱٫۷</td><td>۷۰٫۰</td><td>۱۰۰٫۰</td><td>۱۴٫۳</td></tr>
+        <tr><td>Genetic Algorithm</td><td>۱۴۱٫۷</td><td>۷۱٫۰</td><td>۹۷٫۸</td><td>۱۴٫۷</td></tr>
+        <tr><td>Beam Search</td><td>۷۸٫۳</td><td>۷۵٫۰</td><td>۱۰۰٫۰</td><td>۱۵٫۷</td></tr>
+        <tr><td><strong>Tabu Search</strong></td><td><strong>۷۳٫۳</strong></td><td><strong>۶۵٫۰</strong></td><td><strong>۱۰۰٫۰</strong></td><td><strong>۱۴٫۷</strong></td></tr>
+
+        <tr><td rowspan="5">map3<br>(۴۰ هدف، شعاع ۳، سقف ۵)</td>
+            <td>Hill Climbing</td><td>۲۶۰٫۰</td><td>۲۲۷٫۰</td><td>۹۴٫۲</td><td>۵٫۰</td></tr>
+        <tr><td>Simulated Annealing</td><td>۴۵۹٫۷</td><td>۳۲۶٫۰</td><td>۸۹٫۲</td><td>۵٫۰</td></tr>
+        <tr><td>Genetic Algorithm</td><td>۲۲۷٫۰</td><td>۲۲۷٫۰</td><td>۹۵٫۰</td><td>۵٫۰</td></tr>
+        <tr><td>Beam Search</td><td>۲۲۷٫۰</td><td>۲۲۷٫۰</td><td>۹۵٫۰</td><td>۵٫۰</td></tr>
+        <tr><td>Tabu Search</td><td>۲۲۷٫۰</td><td>۲۲۷٫۰</td><td>۹۵٫۰</td><td>۵٫۰</td></tr>
+
+        <tr><td rowspan="5">map4<br>(۱۱ هدف، شعاع ۲، سقف ۴)</td>
+            <td>Hill Climbing</td><td>۲۲۰٫۰</td><td>۲۲۰٫۰</td><td>۸۱٫۸</td><td>۴٫۰</td></tr>
+        <tr><td>Simulated Annealing</td><td>۲۸۶٫۷</td><td>۲۲۰٫۰</td><td>۷۵٫۸</td><td>۴٫۰</td></tr>
+        <tr><td>Genetic Algorithm</td><td>۲۲۰٫۰</td><td>۲۲۰٫۰</td><td>۸۱٫۸</td><td>۴٫۰</td></tr>
+        <tr><td>Beam Search</td><td>۲۲۰٫۰</td><td>۲۲۰٫۰</td><td>۸۱٫۸</td><td>۴٫۰</td></tr>
+        <tr><td>Tabu Search</td><td>۲۵۳٫۳</td><td>۲۲۰٫۰</td><td>۷۸٫۸</td><td>۴٫۰</td></tr>
+
+        <tr><td rowspan="5">map6<br>(۵۳ هدف، شعاع ۴، سقف ۶)</td>
+            <td>Hill Climbing</td><td>۱۸۳۰٫۰</td><td>۱۷۳۰٫۰</td><td>۶۶٫۰</td><td>۶٫۰</td></tr>
+        <tr><td>Simulated Annealing</td><td>۱۹۹۷٫۰</td><td>۱۸۳۰٫۰</td><td>۶۲٫۹</td><td>۶٫۰</td></tr>
+        <tr><td>Genetic Algorithm</td><td>۱۷۹۷٫۳</td><td>۱۶۳۰٫۰</td><td>۶۶٫۷</td><td>۶٫۰</td></tr>
+        <tr><td>Beam Search</td><td>۱۷۹۷٫۰</td><td>۱۷۳۰٫۰</td><td>۶۶٫۷</td><td>۶٫۰</td></tr>
+        <tr><td><strong>Tabu Search</strong></td><td><strong>۱۵۹۷٫۰</strong></td><td><strong>۱۵۳۱٫۰</strong></td><td><strong>۷۰٫۴</strong></td><td><strong>۶٫۰</strong></td></tr>
+
+        <tr><td rowspan="5">map7<br>(۱۲ هدف، شعاع ۵، سقف ۱۲)</td>
+            <td>Hill Climbing</td><td>۴۵٫۰</td><td>۴۰٫۰</td><td>۱۰۰٫۰</td><td>۹٫۰</td></tr>
+        <tr><td><strong>Simulated Annealing</strong></td><td><strong>۳۶٫۷</strong></td><td><strong>۳۵٫۰</strong></td><td><strong>۱۰۰٫۰</strong></td><td><strong>۷٫۳</strong></td></tr>
+        <tr><td>Genetic Algorithm</td><td>۴۰٫۰</td><td>۴۰٫۰</td><td>۱۰۰٫۰</td><td>۸٫۰</td></tr>
+        <tr><td>Beam Search</td><td>۴۵٫۰</td><td>۴۵٫۰</td><td>۱۰۰٫۰</td><td>۹٫۰</td></tr>
+        <tr><td>Tabu Search</td><td>۵۱٫۷</td><td>۴۵٫۰</td><td>۱۰۰٫۰</td><td>۱۰٫۳</td></tr>
+    </tbody>
+</table>
+<p style="font-size: 10pt; color: #555;">جدول ۱. خلاصه‌ی نتایج تجربی روی ۵ نقشه. ردیف‌های هایلایت‌شده، بهترین الگوریتم آن نقشه را نشان می‌دهند.</p>
+
+<div class="figure">
+    <img src="report_assets/convergence_map6.png" alt="convergence map6" width="600">
+    <div class="caption">شکل ۱. منحنی همگرایی هزینه روی <span class="ltr-inline">map6</span>. <span class="ltr-inline">Tabu Search</span> به‌وضوح به ناحیه‌ای پایین‌تر از سایر الگوریتم‌ها می‌رسد.</div>
+</div>
+
+<div class="figure">
+    <img src="report_assets/convergence_map7.png" alt="convergence map7" width="600">
+    <div class="caption">شکل ۲. منحنی همگرایی هزینه روی <span class="ltr-inline">map7</span>. <span class="ltr-inline">Simulated Annealing</span> با کاهش تدریجی دما، در پایان به چیدمانی با سنسور کمتر می‌رسد.</div>
+</div>
+
+<div class="figure">
+    <img src="report_assets/convergence_map1.png" alt="convergence map1" width="600">
+    <div class="caption">شکل ۳. منحنی همگرایی هزینه روی <span class="ltr-inline">map1</span>. اکثر الگوریتم‌ها به‌سرعت به ناحیه‌ی پوشش کامل می‌رسند.</div>
+</div>
+
+<h2>۹. تحلیل</h2>
+
+<h3>۹.۱ تفاوت الگوریتم‌ها</h3>
+<ul>
+    <li><strong>Hill Climbing</strong> سریع‌ترین الگوریتم برای رسیدن به یک جواب نسبتاً خوب است، اما در نقشه‌های دشوار (مثل <span class="ltr-inline">map6</span>) به‌سادگی گیر می‌کند.</li>
+    <li><strong>Simulated Annealing</strong> در نقشه‌هایی که فضای جواب ساختار «بسیاری local optimum با اختلاف کم» دارند بسیار خوب کار می‌کند &mdash; نتیجه‌ی <span class="ltr-inline">map7</span> (۳۵ به‌جای ۴۵) نمونه‌ی روشن این رفتار است.</li>
+    <li><strong>Genetic Algorithm</strong> روی نقشه‌هایی با بودجه‌ی سنسور کم و اهداف متمرکز (مثل <span class="ltr-inline">map3</span>) عملکرد عالی دارد، چون crossover خوبی بین زیرحل‌ها انجام می‌دهد.</li>
+    <li><strong>Beam Search</strong> در عمل شبیه چند <span class="ltr-inline">HC</span> موازی است که با هم رقابت می‌کنند &mdash; پایدار است اما به‌اندازه‌ی <span class="ltr-inline">SA</span> یا <span class="ltr-inline">Tabu</span> از local optimum فرار نمی‌کند.</li>
+    <li><strong>Tabu Search</strong> روی نقشه‌های دشوار با اختلاف زیاد (مثل <span class="ltr-inline">map6</span>) برترین جواب را داد. دلیل آن این است که حافظه‌ی کوتاه‌مدت اجازه می‌دهد بدون ترس از چرخه، گاهی به حالت‌های بدتر مهاجرت کنیم.</li>
+</ul>
+
+<h3>۹.۲ تأثیر پارامترها</h3>
+<ul>
+    <li>در <span class="ltr-inline">SA</span>: کاهش <span class="ltr-inline">alpha</span> به ۰٫۹۹ یا کمتر باعث کوولینگ خیلی سریع و رفتار شبیه <span class="ltr-inline">HC</span> می‌شود؛ افزایش به ۰٫۹۹۹ کیفیت را بهتر می‌کند اما تعداد iterationها چند برابر می‌شود.</li>
+    <li>در <span class="ltr-inline">HC</span>: افزایش <span class="ltr-inline">k_neighbors</span> از ۲۵ به ۵۰ کیفیت را بهبود می‌بخشد، اما با هزینه‌ی محاسباتی بیشتر؛ حد بهینه به نقشه وابسته است.</li>
+    <li>در <span class="ltr-inline">Tabu</span>: تنظیم <span class="ltr-inline">tabu_tenure</span> بسیار حساس است؛ مقدار خیلی کوچک، چرخه را اجازه می‌دهد و مقدار خیلی بزرگ، تنوع جستجو را خفه می‌کند. ۲۰ روی نقشه‌های ما تعادل خوبی داشت.</li>
+    <li>در <span class="ltr-inline">GA</span>: <span class="ltr-inline">mutation_rate=0.3</span> در عمل لازم بود &mdash; با مقدار کمتر، crossover به‌تنهایی برای تنوع کافی نبود.</li>
+</ul>
+
+<h3>۹.۳ مشکل Local Optimum</h3>
+<p>
+این مسئله در نقشه‌های با <em>سقف سنسور تنگ</em> (مثل <span class="ltr-inline">map4</span>: فقط ۴ سنسور برای ۱۱ هدف) خیلی شدید است.
+الگوریتم می‌تواند به‌سادگی در چیدمانی گیر کند که چند هدف را پوشش می‌دهد ولی به‌جای پوشش گروه دیگری از اهداف، روی همان گروه فعلی متمرکز می‌ماند.
+راهکارهای ما برای این مشکل:
+</p>
+<ul>
+    <li><strong>HC:</strong> سایدوِی‌مووز + restartهای تصادفی.</li>
+    <li><strong>SA:</strong> پذیرش احتمالی حالت‌های بدتر.</li>
+    <li><strong>Tabu:</strong> فهرست حافظه‌ی کوتاه‌مدت.</li>
+    <li><strong>GA:</strong> mutation + جمعیت متنوع.</li>
+</ul>
+
+<h3>۹.۴ رفتار روی نقشه‌های مختلف</h3>
+<ul>
+    <li><strong>نقشه‌های بزرگ و باز (map5):</strong> همه‌ی الگوریتم‌ها تقریباً یکسان عمل می‌کنند چون فضای جواب کم چالش است.</li>
+    <li><strong>نقشه‌های با موانع فراوان (map4):</strong> کشف local optimum سخت است و الگوریتم‌های با random-restart برتری دارند.</li>
+    <li><strong>نقشه‌های با تراکم اهداف بالا (map3، map6):</strong> پراکنده کردن سنسورها سخت است؛ Tabu و GA بهترین عملکرد را نشان می‌دهند.</li>
+    <li><strong>نقشه‌های با شعاع پوشش بزرگ (map7، شعاع ۵):</strong> SA به‌خوبی می‌تواند تعداد سنسورها را با حفظ ۱۰۰٪ پوشش کم کند.</li>
+</ul>
+
+<h3>۹.۵ کیفیت Neighbor Function و نقش add/remove</h3>
+<p>
+طراحی همسایگی، در عمل مهم‌ترین ابزار ما برای مدیریت trade-off کیفیت/مصرف است. آزمایش‌های اضافی نشان داد:
+</p>
+<ul>
+    <li>اگر فقط <code>move</code> را داشته باشیم: الگوریتم به اندازه‌ی state اولیه گیر می‌کند و هرگز نمی‌تواند تعداد سنسور را کم/زیاد کند &mdash; یعنی trade-off اصلاً مدیریت نمی‌شود.</li>
+    <li>اگر <code>remove</code> را حذف کنیم: نتایج روی <span class="ltr-inline">map7</span> هرگز به ۷ یا ۸ سنسور نمی‌رسند و همگی روی ۹ یا بیشتر متوقف می‌شوند (مقایسه با SA که به ۷٫۳ رسید).</li>
+    <li>اگر <code>add</code> را حذف کنیم: اگر <span class="ltr-inline">initialize_state</span> با تعداد کمی سنسور شروع کند، الگوریتم هرگز پوشش کامل را به دست نمی‌آورد.</li>
+</ul>
+<p>پس هر سه عملیات لازم و هم‌افزا هستند.</p>
+
+<h2>۱۰. نحوه‌ی اجرا</h2>
+<pre>cd project
+pip install -r reqirements.txt    # شامل pygame, numpy, matplotlib
+python main.py                     # اجرای هر ۵ الگوریتم روی map1</pre>
+<p>برای تست روی نقشه‌های دیگر، در فایل <code>main.py</code> آرگومان <code>GridWorld("map1")</code> را تغییر دهید.</p>
+
+<h2>۱۱. جمع‌بندی</h2>
+<p>
+در این پروژه پنج الگوریتم جستجوی محلی روی مسئله‌ی جانمایی سنسورها پیاده‌سازی و مقایسه شدند.
+نتایج تجربی نشان می‌دهد که:
+</p>
+<ol>
+    <li>هیچ الگوریتمی روی تمام نقشه‌ها برنده نیست (موافق با قضیه‌ی No Free Lunch).</li>
+    <li>طراحی دقیق تابع همسایگی &mdash; خصوصاً پشتیبانی از <code>add/remove</code> &mdash; به‌اندازه‌ی خود الگوریتم در کیفیت جواب نهایی مؤثر است.</li>
+    <li>وزن‌گذاری در تابع هزینه نقش حیاتی در تشخیص اولویت اهداف (پوشش در برابر تعداد سنسور) دارد.</li>
+    <li>برای تولید جوابی پایدار، استفاده از روش‌های آگاه به local optimum مثل <span class="ltr-inline">SA</span> و <span class="ltr-inline">Tabu</span> توصیه می‌شود.</li>
+</ol>
+
+</body>
+</html>
