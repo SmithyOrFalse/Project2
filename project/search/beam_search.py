@@ -1,3 +1,10 @@
+# -----------------------------------------------------------------------------
+# Authors: Maryam Mousavi & Setayesh Asadian Feili
+# اعضای گروه: مریم موسوی و ستایش اسدیان فیلی
+# Course: Artificial Intelligence – Project 2 (Local Search)
+# University of Isfahan
+# -----------------------------------------------------------------------------
+
 """
 Local Beam Search (bonus task).
 

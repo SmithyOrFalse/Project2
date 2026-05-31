@@ -47,4 +47,7 @@ project/
 
 ## Authors
 
-Add your group members here.
+* Maryam Mousavi (مریم موسوی)
+* Setayesh Asadian Feili (ستایش اسدیان فیلی)
+
+Repository: https://github.com/SmithyOrFalse/Project2
